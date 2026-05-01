@@ -1,142 +1,349 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>AgriQuip Axle Bracket Finder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: Arial;
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-    input, button {
-      padding: 10px;
-      margin: 5px 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: #2c7;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #1a5;
-    }
-    h2 {
-      margin-top: 40px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AgriQuip Axle Bracket Finder</title>
+<style>
+:root {
+--bg: #f6f7f4;
+--card: #ffffff;
+--text: #1f2933;
+--muted: #65727f;
+--border: #d9dfd3;
+--accent: #2f6f3e;
+--accent-soft: #e7f1e8;
+--warn: #fff4d6;
+--warn-border: #e3b341;
+}
+* { box-sizing: border-box; }
+body {
+margin: 0;
+font-family: Arial, Helvetica, sans-serif;
+background: var(--bg);
+color: var(--text);
+}
+header {
+background: var(--card);
+border-bottom: 1px solid var(--border);
+padding: 22px 24px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; }
+h1 { margin: 0 0 6px; font-size: 28px; }
+.subtitle { margin: 0; color: var(--muted); }
+.panel {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 18px;
+margin: 18px 0;
+box-shadow: 0 2px 8px rgba(20, 30, 20, 0.04);
+}
+.grid {
+display: grid;
+grid-template-columns: 1fr 1fr 1.2fr auto;
+gap: 12px;
+align-items: end;
+}
+label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+select, input {
+width: 100%;
+padding: 11px 12px;
+border: 1px solid var(--border);
+border-radius: 10px;
+font-size: 15px;
+background: white;
+}
+button {
+padding: 11px 14px;
+border: 0;
+border-radius: 10px;
+background: var(--accent);
+color: white;
+font-weight: 700;
+cursor: pointer;
+font-size: 15px;
+}
+button.secondary {
+background: #e6ece4;
+color: #24412a;
+}
+.stats { color: var(--muted); font-size: 14px; margin-top: 10px; }
+.results { display: grid; gap: 14px; }
+.card {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 16px;
+}
+.card-head {
+display: flex;
+justify-content: space-between;
+gap: 12px;
+align-items: flex-start;
+border-bottom: 1px solid var(--border);
+padding-bottom: 12px;
+margin-bottom: 12px;
+}
+.brand { color: var(--accent); font-weight: 800; letter-spacing: .02em; }
+.model { font-size: 20px; font-weight: 800; margin-top: 4px; white-space: pre-wrap; }
+.code {
+background: var(--accent-soft);
+color: var(--accent);
+border: 1px solid #c8dfca;
+border-radius: 999px;
+padding: 8px 12px;
+font-weight: 800;
+white-space: nowrap;
+}
+.detail-grid {
+display: grid;
+grid-template-columns: repeat(4, minmax(0, 1fr));
+gap: 10px;
+margin-bottom: 12px;
+}
+.detail {
+border: 1px solid var(--border);
+border-radius: 10px;
+padding: 10px;
+background: #fbfcfa;
+min-height: 62px;
+}
+.detail span {
+display: block;
+color: var(--muted);
+font-size: 12px;
+margin-bottom: 4px;
+font-weight: 700;
+text-transform: uppercase;
+}
+.detail strong { font-size: 15px; overflow-wrap: anywhere; }
+.comment {
+white-space: pre-wrap;
+line-height: 1.4;
+background: #f9faf8;
+border: 1px solid var(--border);
+border-radius: 10px;
+padding: 12px;
+}
+.warning {
+background: var(--warn);
+border-color: var(--warn-border);
+}
+.attachments {
+margin-top: 12px;
+padding: 12px;
+border: 1px dashed var(--border);
+border-radius: 10px;
+color: var(--muted);
+font-size: 14px;
+}
+.empty {
+text-align: center;
+color: var(--muted);
+padding: 30px;
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 14px;
+}
+@media (max-width: 850px) {
+.grid { grid-template-columns: 1fr; }
+.detail-grid { grid-template-columns: 1fr 1fr; }
+.card-head { flex-direction: column; }
+}
+@media (max-width: 520px) {
+.detail-grid { grid-template-columns: 1fr; }
+header { padding: 18px 14px; }
+.panel, .card { border-radius: 10px; }
+}
+</style>
 </head>
 <body>
-
+<header>
+<div class="wrap">
 <h1>AgriQuip Axle Bracket Finder</h1>
+<p class="subtitle">Search by brand, model, or notes. McConnel build codes show with the 2020 prefix.</p>
+</div>
+</header>
 
-<!-- ================= UPLOAD ================= -->
-<h2>Upload File to Tractor</h2>
+<main class="wrap">
+<section class="panel">
+<div class="grid">
+<div>
+<label for="brand">Brand</label>
+<select id="brand"><option value="">All brands</option></select>
+</div>
+<div>
+<label for="model">Model contains</label>
+<input id="model" placeholder="e.g. 6155R, T7.175, 6215" />
+</div>
+<div>
+<label for="keyword">Keyword / notes search</label>
+<input id="keyword" placeholder="e.g. cab suspension, air brakes, TMR, 650 tyres" />
+</div>
+<button id="clear" class="secondary">Clear</button>
+</div>
+<div class="stats" id="stats">Loading data…</div>
+</section>
 
-<input id="uploadBrand" placeholder="Brand (e.g. John Deere)">
-<input id="uploadModel" placeholder="Model (e.g. 6155R)">
-<input type="file" id="fileInput">
+<section id="results" class="results"></section>
+</main>
+
+<script>
+let records = [];
+const brandEl = document.getElementById('brand');
+const modelEl = document.getElementById('model');
+const keywordEl = document.getElementById('keyword');
+const resultsEl = document.getElementById('results');
+const statsEl = document.getElementById('stats');
+const clearEl = document.getElementById('clear');
+
+const warningWords = ['NOT ', 'CHECK', 'TBC', 'ONLY', 'WARNING', 'IF ', 'MAX ', 'REQUIRES', 'NOT FOR'];
+
+function clean(v) {
+return (v ?? '').toString().trim();
+}
+
+function escapeHtml(value) {
+return clean(value)
+.replaceAll('&', '&amp;')
+.replaceAll('<', '&lt;')
+.replaceAll('>', '&gt;')
+.replaceAll('"', '&quot;')
+.replaceAll("'", '&#039;');
+}
+
+function hasWarning(record) {
+const text = `${record.tractorModel || ''} ${record.comment || ''}`.toUpperCase();
+return warningWords.some(w => text.includes(w));
+}
+
+function detail(label, value) {
+return `<div class="detail"><span>${label}</span><strong>${escapeHtml(value || '—')}</strong></div>`;
+}
+
+function renderCard(record) {
+const warningClass = hasWarning(record) ? ' warning' : '';
+return `
+       <article class="card">
+         <div class="card-head">
+           <div>
+             <div class="brand">${escapeHtml(record.brand)}</div>
+             <div class="model">${escapeHtml(record.tractorModel)}</div>
+           </div>
+           <div class="code">${escapeHtml(record.mcconnelPartNumber || 'No code')}</div>
+         </div>
+
+         <div class="detail-grid">
+           ${detail('TN No.', record.tnNo)}
+           ${detail('Spearhead No.', record.spearheadPartNumber)}
+           ${detail('Latches included?', record.latchesIncluded)}
+           ${detail('Twose No.', record.twosePartNo)}
+           ${detail('Centres', record.centres)}
+           ${detail('Latch type', record.latchType)}
+           ${detail('Category', record.category)}
+           ${detail('Source row', record.row)}
+         </div>
+
+         <div class="comment${warningClass}">${escapeHtml(record.comment || 'No comments recorded.')}</div>
+
+         <div class="attachments">
+           <strong>Attachments:</strong> photos, PDFs and DXFs can be added in the next version once storage is connected.
+           For now, use this as the searchable fitting reference.
+         </div>
+       </article>
+     `;
+}
+
+function applyFilters() {
+const brand = brandEl.value.toLowerCase();
+const model = modelEl.value.toLowerCase().trim();
+const keyword = keywordEl.value.toLowerCase().trim();
+
+let filtered = records.filter(r => {
+const brandOk = !brand || clean(r.brand).toLowerCase() === brand;
+const modelOk = !model || clean(r.tractorModel).toLowerCase().includes(model);
+const blob = [r.brand, r.tractorModel, r.tnNo, r.mcconnelPartNumber, r.spearheadPartNumber, r.latchType, r.category, r.comment].map(clean).join(' ').toLowerCase();
+const keywordOk = !keyword || blob.includes(keyword);
+return brandOk && modelOk && keywordOk;
+});
+
+const limited = filtered.slice(0, 100);
+statsEl.textContent = `${filtered.length} match${filtered.length === 1 ? '' : 'es'} found${filtered.length > 100 ? ' — showing first 100' : ''}.`;
+
+if (!limited.length) {
+resultsEl.innerHTML = `<div class="empty">No matches found. Try a shorter model number, e.g. “6155” instead of “6155R”.</div>`;
+return;
+}
+resultsEl.innerHTML = limited.map(renderCard).join('');
+}
+
+function populateBrands() {
+const brands = [...new Set(records.map(r => clean(r.brand)).filter(Boolean))].sort();
+brandEl.innerHTML = '<option value="">All brands</option>' + brands.map(b => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join('');
+}
+
+clearEl.addEventListener('click', () => {
+brandEl.value = '';
+modelEl.value = '';
+keywordEl.value = '';
+applyFilters();
+});
+brandEl.addEventListener('change', applyFilters);
+modelEl.addEventListener('input', applyFilters);
+keywordEl.addEventListener('input', applyFilters);
+
+fetch('data/records.json')
+.then(r => r.json())
+.then(data => {
+records = data;
+populateBrands();
+applyFilters();
+})
+.catch(err => {
+statsEl.textContent = 'Could not load data/records.json';
+resultsEl.innerHTML = `<div class="empty">Data failed to load. Check that data/records.json was uploaded beside index.html.</div>`;
+console.error(err);
+});
+</script>
+<h2>Upload Files</h2>
+
+<input type="file" id="fileInput" />
+<br><br>
+
+<textarea id="noteInput" placeholder="Add notes about this file..." rows="3" cols="40"></textarea>
+<br><br>
 
 <button onclick="uploadFile()">Upload</button>
 
 <p id="uploadStatus"></p>
 
-<!-- ================= VIEW FILES ================= -->
-<h2>View Files for Tractor</h2>
-
-<input id="viewBrand" placeholder="Brand (e.g. John Deere)">
-<input id="viewModel" placeholder="Model (e.g. 6155R)">
-
-<button onclick="loadFiles()">Load Files</button>
-
-<ul id="fileList"></ul>
-
 <script>
-function safeText(text) {
-  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-// ================= UPLOAD =================
 async function uploadFile() {
-  const brand = document.getElementById('uploadBrand').value;
-  const model = document.getElementById('uploadModel').value;
-  const file = document.getElementById('fileInput').files[0];
+  const fileInput = document.getElementById('fileInput');
+  const note = document.getElementById('noteInput').value;
   const status = document.getElementById('uploadStatus');
 
-  if (!brand || !model || !file) {
-    status.innerText = 'Please enter brand, model, and select a file.';
+  if (!fileInput.files.length) {
+    status.innerText = "Please select a file.";
     return;
   }
 
-  status.innerText = 'Uploading...';
+  const file = fileInput.files[0];
 
-  try {
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      headers: {
-        'x-tractor-brand': brand,
-        'x-tractor-model': model,
-        'x-file-name': file.name
-      },
-      body: file
-    });
+  const response = await fetch('/api/upload', {
+    method: 'POST',
+    body: file
+  });
 
-    const result = await response.json();
+  const result = await response.json();
 
-    if (!response.ok) {
-      status.innerText = result.error || 'Upload failed';
-      return;
-    }
-
-    status.innerHTML = `
-      Uploaded successfully!<br>
-      <a href="${result.url}" target="_blank">View File</a>
-    `;
-  } catch (err) {
-    status.innerText = 'Upload error';
-  }
-}
-
-// ================= LOAD FILES =================
-async function loadFiles() {
-  const brand = document.getElementById('viewBrand').value;
-  const model = document.getElementById('viewModel').value;
-  const fileList = document.getElementById('fileList');
-
-  if (!brand || !model) {
-    fileList.innerHTML = '<li>Please enter brand and model</li>';
-    return;
-  }
-
-  fileList.innerHTML = 'Loading...';
-
-  try {
-    const response = await fetch(`/api/files?brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(model)}`);
-    const files = await response.json();
-
-    if (!response.ok) {
-      fileList.innerHTML = `<li>${files.error || 'Error loading files'}</li>`;
-      return;
-    }
-
-    if (!files.length) {
-      fileList.innerHTML = '<li>No files uploaded yet.</li>';
-      return;
-    }
-
-    fileList.innerHTML = files.map(file => {
-      const name = file.pathname.split('/').pop();
-      return `<li><a href="${file.url}" target="_blank">${safeText(name)}</a></li>`;
-    }).join('');
-
-  } catch (err) {
-    fileList.innerHTML = '<li>Error loading files</li>';
-  }
+  status.innerHTML = `
+    Uploaded!<br>
+    <a href="${result.url}" target="_blank">View File</a><br>
+    Note: ${note}
+  `;
 }
 </script>
-
 </body>
 </html>
