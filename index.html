@@ -306,5 +306,44 @@
         console.error(err);
       });
   </script>
+<h2>Upload Files</h2>
+
+<input type="file" id="fileInput" />
+<br><br>
+
+<textarea id="noteInput" placeholder="Add notes about this file..." rows="3" cols="40"></textarea>
+<br><br>
+
+<button onclick="uploadFile()">Upload</button>
+
+<p id="uploadStatus"></p>
+
+<script>
+async function uploadFile() {
+  const fileInput = document.getElementById('fileInput');
+  const note = document.getElementById('noteInput').value;
+  const status = document.getElementById('uploadStatus');
+
+  if (!fileInput.files.length) {
+    status.innerText = "Please select a file.";
+    return;
+  }
+
+  const file = fileInput.files[0];
+
+  const response = await fetch('/api/upload', {
+    method: 'POST',
+    body: file
+  });
+
+  const result = await response.json();
+
+  status.innerHTML = `
+    Uploaded!<br>
+    <a href="${result.url}" target="_blank">View File</a><br>
+    Note: ${note}
+  `;
+}
+</script>
 </body>
 </html>
