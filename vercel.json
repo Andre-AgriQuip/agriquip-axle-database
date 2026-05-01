@@ -1,5 +1,4 @@
 {
-  "framework": "static",
-  "buildCommand": "",
-  "outputDirectory": "."
+  "buildCommand": null,
+  "outputDirectory": null
 }
